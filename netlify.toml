@@ -1,0 +1,42 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[[plugins]]
+  package = "netlify-plugin-a11y"
+
+  [plugins.inputs]
+    # Version 0.0.12 does not expose pa11y's timeout setting and always
+    # fails the deploy when its browser times out. Keep the UI-installed
+    # plugin inactive until it can be replaced with the maintained plugin.
+    checkPaths = []
+    resultMode = "warn"
+
+# Clean URLs for the two companion pages. The home page links to /guide and
+# /poems, while the pages themselves still cross-link with the .html paths,
+# so both forms have to resolve.
+[[redirects]]
+  from = "/guide"
+  to = "/guide.html"
+  status = 200
+
+[[redirects]]
+  from = "/poems"
+  to = "/poems.html"
+  status = 200
+
+# Clean URL for the mobile download page, plus the shorthand people type.
+[[redirects]]
+  from = "/app"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/download"
+  to = "/app"
+  status = 301
+
+[[redirects]]
+  from = "/install"
+  to = "/app"
+  status = 301

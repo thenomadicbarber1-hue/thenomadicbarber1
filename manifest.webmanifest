@@ -1,0 +1,101 @@
+{
+  "id": "/",
+  "name": "The Nomadic Barber Global — Nomadic Ready",
+  "short_name": "Nomadic Ready",
+  "description": "Find texture-aware barbers, understand your hair, and prepare a better haircut brief wherever you travel.",
+  "lang": "en",
+  "dir": "ltr",
+  "start_url": "/?source=app",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "minimal-ui"
+  ],
+  "prefer_related_applications": false,
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "orientation": "any",
+  "background_color": "#141319",
+  "theme_color": "#141319",
+  "categories": [
+    "travel",
+    "lifestyle",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "/media/nomadic-ready-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/media/nomadic-ready-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/media/nomadic-ready-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Find a barber",
+      "short_name": "Find",
+      "url": "/#find",
+      "icons": [
+        {
+          "src": "/media/nomadic-ready-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Haircut consultation",
+      "short_name": "Consult",
+      "url": "/#assistant",
+      "icons": [
+        {
+          "src": "/media/nomadic-ready-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Texture guide",
+      "short_name": "Textures",
+      "url": "/#textures",
+      "icons": [
+        {
+          "src": "/media/nomadic-ready-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "handle_links": "preferred",
+  "screenshots": [
+    {
+      "src": "/media/screenshot-find-a-shop.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Find the five closest texture-aware barbershops in any city"
+    },
+    {
+      "src": "/media/screenshot-texture-atlas.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "The 1A to 4C texture atlas, readable offline"
+    }
+  ]
+}
