@@ -40,3 +40,16 @@
   from = "/install"
   to = "/app"
   status = 301
+
+# Clean URL for the consultant program hub. Every link to it — collection bar,
+# footers, the app dock — uses /consulting, and "/training" is what people type
+# after hearing the session described out loud, so it lands there too.
+[[redirects]]
+  from = "/consulting"
+  to = "/consulting.html"
+  status = 200
+
+[[redirects]]
+  from = "/training"
+  to = "/consulting"
+  status = 301

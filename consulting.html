@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#141319">
+  <meta name="description" content="The Nomadic Barber consultant program: a five-module grooming and barbershop-research training for corporate HR teams and hotel concierge desks, facilitated by DeWayne A. Dickerson.">
+  <meta property="og:title" content="The Nomadic Barber — Consultant Program">
+  <meta property="og:description" content="Your standards travel with you. A five-module training program for corporate HR teams and hotel front desks, run live or virtually.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/media/nomadic-barber-global-mark.webp">
+  <title>Consultant Program — The Nomadic Barber Global</title>
+  <link rel="canonical" href="/consulting">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/media/nomadic-ready-icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/media/nomadic-ready-180.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Bebas+Neue&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="guide.css">
+  <link rel="stylesheet" href="consulting.css">
+</head>
+<body class="consulting-page">
+  <div class="grain" aria-hidden="true"></div>
+  <nav class="collection-bar" aria-label="The Nomadic Barber collection">
+    <span>Three worlds · music on every page</span>
+    <div>
+      <a href="/">Global App</a>
+      <a href="/guide">Grooming Guide</a>
+      <a href="/poems">True Love Is Reality</a>
+      <a href="/consulting" aria-current="page">Consultant Program</a>
+      <a href="/app">Get the app</a>
+    </div>
+  </nav>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="The Nomadic Barber Global home">
+      <img class="brand-art" src="media/nomadic-barber-global-mark.webp" alt="">
+      <span><strong>The Nomadic Barber Global</strong></span>
+    </a>
+    <nav aria-label="Program navigation">
+      <a href="#roadmap">Roadmap</a>
+      <a href="#modules">The 5 modules</a>
+      <a href="#method">N.O.M.A.D.I.C.</a>
+      <a href="#practice">Practice</a>
+      <a class="nav-cta" href="#book-session">Book a session</a>
+    </nav>
+    <button class="menu-button" aria-label="Open menu" aria-expanded="false">Menu</button>
+  </header>
+
+  <main>
+    <section class="program-hero" id="program">
+      <div class="hero-rule" aria-hidden="true"></div>
+      <div class="program-intro">
+        <p class="kicker light"><span>P1</span> <span class="track-eyebrow" data-track-field="eyebrow">Corporate &amp; HR training</span></p>
+        <h1>Your standards<br>travel <em>with you.</em></h1>
+        <p class="program-lede" data-track-field="lede">Executive presence in every city, for every hair type. A working session that turns grooming from a travel-day gamble into a method your team can repeat anywhere.</p>
+        <div class="facilitator">
+          <span class="facilitator-mark" aria-hidden="true">DD</span>
+          <div>
+            <b>Facilitated by DeWayne A. Dickerson</b>
+            <small>20-year U.S. Navy veteran · Author of The Nomadic Barber Grooming Guide</small>
+          </div>
+        </div>
+        <div class="program-actions">
+          <button class="button button-primary" type="button" id="startSession">Open the session <span>↗</span></button>
+          <a class="text-link" href="#book-session">Bring it to your team <span>→</span></a>
+        </div>
+      </div>
+
+      <aside class="console" aria-labelledby="consoleTitle">
+        <div class="console-head">
+          <h2 id="consoleTitle">Session console</h2>
+          <span class="console-live"><i aria-hidden="true"></i> <span id="consoleState">Ready</span></span>
+        </div>
+        <div class="console-ring">
+          <svg viewBox="0 0 132 132" role="img" aria-labelledby="ringLabel">
+            <title id="ringLabel">Module completion progress</title>
+            <circle class="ring-track" cx="66" cy="66" r="54"></circle>
+            <circle class="ring-value" id="ringValue" cx="66" cy="66" r="54"></circle>
+          </svg>
+          <div class="ring-readout">
+            <b id="ringPercent">0<i>%</i></b>
+            <small><span id="ringCount">0 of 5</span> modules</small>
+          </div>
+        </div>
+        <ol class="console-pips" id="consolePips" aria-label="Module completion status"></ol>
+        <dl class="console-stats">
+          <div><dt>Modules</dt><dd>5</dd></div>
+          <div><dt>Segments</dt><dd>22</dd></div>
+          <div><dt>Run time</dt><dd>≈90<i>min</i></dd></div>
+          <div><dt>Tracks</dt><dd>2</dd></div>
+        </dl>
+        <p class="console-note" id="consoleNote">Work through the modules below — the console keeps your place on this device.</p>
+        <button class="console-reset" type="button" id="resetProgress">Clear progress</button>
+      </aside>
+    </section>
+
+    <div class="track-switch" id="trackSwitch">
+      <div class="track-switch-inner">
+        <p class="track-label">Choose the room</p>
+        <div class="track-buttons" role="tablist" aria-label="Training track">
+          <button class="track-button active" type="button" role="tab" data-track="corporate" aria-selected="true">
+            <b>Corporate &amp; HR</b><small>Travelling employees</small>
+          </button>
+          <button class="track-button" type="button" role="tab" data-track="hotel" aria-selected="false">
+            <b>Hotels &amp; Concierge</b><small>Front desk &amp; guest services</small>
+          </button>
+        </div>
+        <p class="track-summary" data-track-field="summary">Built for HR, mobility and travel-heavy teams who land in a new city and still need to look like themselves.</p>
+      </div>
+    </div>
+
+    <section class="roadmap section" id="roadmap">
+      <div class="roadmap-copy reveal">
+        <p class="kicker"><span>01</span> Today's roadmap</p>
+        <h2>What we<br><em>cover.</em></h2>
+        <p>Five modules that move from self-awareness to research, from research to the conversation in the chair, and from the conversation to a habit that holds in every city.</p>
+        <ul class="leave-with" id="leaveWith" aria-label="What you leave with"></ul>
+      </div>
+      <ol class="roadmap-track" id="roadmapTrack" aria-label="Module roadmap"></ol>
+    </section>
+
+    <section class="warmup section reveal" id="warmup">
+      <div class="warmup-card">
+        <div class="warmup-head">
+          <p class="kicker light"><span>02</span> Warm-up · 3 minutes</p>
+          <div class="timer" data-timer="180">
+            <span class="timer-readout">03:00</span>
+            <button class="timer-button" type="button" data-timer-toggle>Start <span aria-hidden="true">▷</span></button>
+            <button class="timer-reset" type="button" data-timer-reset aria-label="Reset the warm-up timer">↺</button>
+          </div>
+        </div>
+        <h2 data-track-field="warmupTitle">Think back…</h2>
+        <p class="warmup-prompt" data-track-field="warmupPrompt">Have you ever gotten a haircut away from home that didn't come out right?</p>
+        <ul class="warmup-questions" id="warmupQuestions"></ul>
+      </div>
+    </section>
+
+    <section class="modules section" id="modules">
+      <div class="section-heading modules-heading reveal">
+        <p class="kicker"><span>03</span> The program</p>
+        <h2>Five<br><em>modules.</em></h2>
+        <p>Open a module to run it. Mark it complete and the console keeps count, so a session split across two mornings picks up where it stopped.</p>
+      </div>
+      <div class="module-stack" id="moduleStack"></div>
+    </section>
+
+    <section class="method section" id="method">
+      <div class="method-heading reveal">
+        <p class="kicker light"><span>04</span> The through-line</p>
+        <h2>The N.O.M.A.D.I.C.<br><em>Method™</em></h2>
+        <p>Seven letters that survive the flight home. Tap any letter to see what it asks of you.</p>
+      </div>
+      <div class="method-board reveal delay-1">
+        <div class="method-letters" id="methodLetters" role="tablist" aria-label="The N.O.M.A.D.I.C. method"></div>
+        <div class="method-detail" id="methodDetail" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="practice section" id="practice">
+      <div class="practice-heading reveal">
+        <p class="kicker"><span>05</span> Role play · 7 minutes</p>
+        <h2>Practice<br><em>it.</em></h2>
+        <p data-track-field="practiceNote">In pairs: one plays the traveller, one coaches them through the checklist. Then switch.</p>
+        <div class="timer timer-light" data-timer="420">
+          <span class="timer-readout">07:00</span>
+          <button class="timer-button" type="button" data-timer-toggle>Start <span aria-hidden="true">▷</span></button>
+          <button class="timer-reset" type="button" data-timer-reset aria-label="Reset the role play timer">↺</button>
+        </div>
+      </div>
+      <div class="scenario-grid" id="scenarioGrid"></div>
+    </section>
+
+    <section class="takeaways section" id="takeaways">
+      <div class="takeaway-copy reveal">
+        <p class="kicker light"><span>06</span> Key takeaways</p>
+        <h2>Remember<br>these <em>five.</em></h2>
+        <blockquote>Wherever you go, your standards should travel with you.</blockquote>
+      </div>
+      <ol class="takeaway-list" id="takeawayList"></ol>
+    </section>
+
+    <section class="booking section" id="book-session">
+      <div class="booking-copy reveal">
+        <p class="kicker"><span>07</span> Bring it to your team</p>
+        <h2>Run this<br><em>session.</em></h2>
+        <p>Delivered on site or virtually, for a travelling sales team, a relocation cohort, or a front desk that gets asked about haircuts every week.</p>
+        <ul class="booking-points">
+          <li>Both tracks available — employees or guest-facing staff</li>
+          <li>Facilitator-led with timed activities and role play</li>
+          <li>Tailored to the cities your people actually fly to</li>
+        </ul>
+        <div class="booking-direct">
+          <a href="mailto:thenomadicbarber1@gmail.com">thenomadicbarber1@gmail.com</a>
+          <a href="tel:+14703324719">(470) 332-4719</a>
+        </div>
+      </div>
+      <form class="booking-form reveal delay-1" id="trainingForm">
+        <div class="form-title"><span>Session request</span><small>Replies within two business days.</small></div>
+        <div class="two-col">
+          <label><span>Organization *</span><input name="organization" required maxlength="160" autocomplete="organization"></label>
+          <label><span>Your name *</span><input name="contactName" required maxlength="140" autocomplete="name"></label>
+        </div>
+        <div class="two-col">
+          <label><span>Email *</span><input name="contactEmail" type="email" required maxlength="254" autocomplete="email"></label>
+          <label><span>Phone</span><input name="phone" type="tel" maxlength="40" autocomplete="tel"></label>
+        </div>
+        <div class="two-col">
+          <label><span>Track *</span><select name="track" id="trackField" required>
+            <option value="corporate">Corporate &amp; HR</option>
+            <option value="hotel">Hotels &amp; Concierge</option>
+          </select></label>
+          <label><span>Format *</span><select name="format" required>
+            <option value="onsite">On site</option>
+            <option value="virtual">Virtual</option>
+            <option value="either">Either works</option>
+          </select></label>
+        </div>
+        <div class="two-col">
+          <label><span>City</span><input name="city" maxlength="120" autocomplete="address-level2"></label>
+          <label><span>Country</span><input name="country" maxlength="100" autocomplete="country-name"></label>
+        </div>
+        <div class="two-col">
+          <label><span>Group size</span><input name="groupSize" type="number" min="1" max="2000" inputmode="numeric" placeholder="18"></label>
+          <label><span>Target timing</span><input name="targetTiming" maxlength="120" placeholder="Before our March kickoff"></label>
+        </div>
+        <label><span>What should this session solve?</span><textarea name="notes" rows="4" maxlength="2000" placeholder="Our regional managers fly weekly and keep arriving to meetings with a cut they didn't ask for."></textarea></label>
+        <label class="honeypot" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+        <p class="form-message" id="trainingMessage" role="status"></p>
+        <button class="button button-primary" type="submit">Request this session <span>→</span></button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <a class="brand footer-brand" href="/"><img class="brand-art" src="media/nomadic-barber-global-mark.webp" alt=""><span><strong>The Nomadic Barber Global</strong></span></a>
+    <p>One standard. Every city.</p>
+    <div><a href="/">Global App</a><a href="/#find">Directory</a><a href="/guide">Grooming Guide</a><a href="/poems">True Love Is Reality</a><a href="/consulting" aria-current="page">Consultant Program</a><a href="/app">Download the app</a></div>
+    <small>© 2026 The Nomadic Barber. The N.O.M.A.D.I.C. Method™ is a training framework by DeWayne A. Dickerson. Grooming guidance is educational and does not replace an in-person professional consultation.</small>
+  </footer>
+
+  <button class="global-sound" id="globalSound" type="button" aria-label="Play background music" aria-pressed="false">
+    <span class="sound-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="sound-label">Music off</span>
+  </button>
+  <audio id="globalTrack" src="media/song.mp3" preload="metadata" loop></audio>
+
+  <nav class="app-dock" aria-label="Program shortcuts">
+    <a href="#roadmap"><span aria-hidden="true">≡</span>Roadmap</a>
+    <a href="#modules"><span aria-hidden="true">◫</span>Modules</a>
+    <a href="#method"><span aria-hidden="true">✦</span>Method</a>
+    <a href="#book-session"><span aria-hidden="true">→</span>Book</a>
+  </nav>
+
+  <script src="install.js" defer></script>
+  <script src="consulting.js" defer></script>
+</body>
+</html>
