@@ -107,6 +107,37 @@ function mapsPlaceLinks(place) {
   googleWebSearch(name ? `${name} barbershop in ${place}` : `barber shops in ${place}`);
 }
 
+// The fallback for when the listings come up short: hand the traveller's own
+// words to Google, which knows shops no public map has recorded. "Near me" lets
+// Google use its own idea of where they are; a searched city is named instead.
+const googleFallbackForm = document.querySelector("#googleFallbackForm");
+const googleShopNameField = document.querySelector("#googleShopName");
+let searchedPlace = "";
+
+function googleFallbackUrl(target) {
+  const name = googleShopNameField ? googleShopNameField.value.trim().slice(0, 100) : "";
+  const where = searchedPlace ? `in ${searchedPlace}` : "near me";
+  const terms = name ? `${name} barber ${where}` : `barbers ${where}`;
+  if (target === "maps") {
+    const center = !searchedPlace && currentPosition ? `&center=${currentPosition.latitude},${currentPosition.longitude}` : "";
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(terms)}${center}`;
+  }
+  return `https://www.google.com/search?q=${encodeURIComponent(terms)}`;
+}
+
+// A name that came up empty in the listings is the one to try on Google.
+function offerGoogleFallback(name) {
+  if (googleShopNameField && name) googleShopNameField.value = name;
+}
+
+if (googleFallbackForm) {
+  googleFallbackForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const target = event.submitter?.dataset.target || "search";
+    window.open(googleFallbackUrl(target), "_blank", "noopener");
+  });
+}
+
 function setSearchLoading(label) {
   status.textContent = label;
   results.innerHTML = `<div class="shop-skeletons" aria-label="Searching for nearby shops">${Array.from({ length: 5 }, () => "<i></i>").join("")}</div>`;
@@ -136,7 +167,8 @@ async function loadShops(url, fallbackLabel) {
     // rather than as a directory result.
     status.textContent = matches
       ? `${matches} match${matches === 1 ? "" : "es"} for “${nameQuery}”`
-      : `No shop named “${nameQuery}” nearby`;
+      : `No shop named “${nameQuery}” nearby — try Google below`;
+    if (!matches) offerGoogleFallback(nameQuery);
   } else {
     status.textContent = ratedOnly && !currentShops.length
       ? `No ${barLabel()}★ reviewed shops here yet — ${nearbyShops.length} to vet yourself`
@@ -225,8 +257,8 @@ function renderShops() {
     // search to Google rather than pretending the shop does not exist.
     const webSearch = `https://www.google.com/search?q=${encodeURIComponent(`${nameQuery} barbershop`)}`;
     results.innerHTML = nameQuery
-      ? `<div class="empty-state"><span>\u2316</span><h3>No shop named \u201c${escapeHtml(nameQuery)}\u201d found.</h3><p>This search reads the public OpenStreetMap listings, and no shop there carries that name \u2014 plenty of real shops simply have not been added to it yet. <a href="${escapeHtml(webSearch)}" target="_blank" rel="noopener">Look it up on Google \u2197</a>, put its street address in the search box above to see what is mapped around it, or <a href="#business">add it to the Nomadic Ready directory</a>.</p></div>`
-      : `<div class="empty-state"><span>\u2316</span><h3>No shops found in this area.</h3><p>Try a nearby city or use the live map links below to broaden your search.</p></div>`;
+      ? `<div class="empty-state"><span>\u2316</span><h3>No shop named \u201c${escapeHtml(nameQuery)}\u201d found.</h3><p>This search reads the public OpenStreetMap listings, and no shop there carries that name \u2014 plenty of real shops simply have not been added to it yet. <a href="${escapeHtml(webSearch)}" target="_blank" rel="noopener">Look it up on Google \u2197</a> (or use the Google search just below), put its street address in the search box above to see what is mapped around it, or <a href="#business">add it to the Nomadic Ready directory</a>.</p></div>`
+      : `<div class="empty-state"><span>\u2316</span><h3>No shops found in this area.</h3><p>Try a nearby city, or type the shop you are looking for into the Google search below to find barbers near you.</p></div>`;
     return;
   }
   results.innerHTML = groups.join("");
@@ -303,6 +335,7 @@ locateButton.addEventListener("click", () => {
     const latitude = Math.round(coords.latitude * 1000) / 1000;
     const longitude = Math.round(coords.longitude * 1000) / 1000;
     currentPosition = { latitude, longitude };
+    searchedPlace = "";
     mapsLinks(latitude, longitude);
     document.querySelector('[name="latitude"]').value = latitude;
     document.querySelector('[name="longitude"]').value = longitude;
@@ -337,6 +370,8 @@ worldSearchForm.addEventListener("submit", async (event) => {
     : currentPosition
       ? { lat: currentPosition.latitude, lng: currentPosition.longitude }
       : {};
+  if (place) searchedPlace = place;
+  if (name) offerGoogleFallback(name);
   const label = place || resultLocation.textContent || "Your current area";
   setSearchLoading(place ? `Searching ${name ? `for ${name} in ` : ""}${place}…` : `Looking for ${name} near you and worldwide…`);
   if (place) mapsPlaceLinks(place);

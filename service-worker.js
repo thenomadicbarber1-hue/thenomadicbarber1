@@ -1,4 +1,4 @@
-const cacheName = "nomadic-ready-v12";
+const cacheName = "nomadic-ready-v13";
 const offlinePage = "/index.html";
 const appShell = [
   "/",
