@@ -1,4 +1,4 @@
-const cacheName = "nomadic-ready-v10";
+const cacheName = "nomadic-ready-v12";
 const offlinePage = "/index.html";
 const appShell = [
   "/",
@@ -6,6 +6,9 @@ const appShell = [
   "/app.html",
   "/guide.html",
   "/poems.html",
+  "/consulting.html",
+  "/consulting.css",
+  "/consulting.js",
   "/guide.css",
   "/guide.js",
   "/install.js",
@@ -24,6 +27,7 @@ const appShell = [
 function documentKey(url) {
   if (url.pathname === "/" || url.pathname === "/index.html") return offlinePage;
   if (url.pathname === "/app") return "/app.html";
+  if (url.pathname === "/consulting") return "/consulting.html";
   return url.pathname;
 }
 

@@ -27,6 +27,11 @@
 
 # Clean URL for the mobile download page, plus the shorthand people type.
 [[redirects]]
+  from = "/consulting"
+  to = "/consulting.html"
+  status = 200
+
+[[redirects]]
   from = "/app"
   to = "/app.html"
   status = 200
