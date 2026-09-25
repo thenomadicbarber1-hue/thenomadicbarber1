@@ -190,6 +190,15 @@
             <p>We’re using your approximate area to find nearby shops. Use precise location for closer results.</p>
           </div>
         </div>
+        <form class="google-fallback" id="googleFallbackForm" action="https://www.google.com/search" method="get" target="_blank">
+          <label for="googleShopName"><b>Can&rsquo;t find your shop?</b> Search Google for barbers near you by name.</label>
+          <div>
+            <input id="googleShopName" name="q" placeholder="Shop name, e.g. Fresh Cutz Barber Lounge" autocomplete="off" maxlength="100">
+            <button type="submit" data-target="search">Search Google <span>↗</span></button>
+            <button type="submit" data-target="maps" class="secondary">Google Maps <span>↗</span></button>
+          </div>
+          <small>Leave the name blank to see every barber near you on Google. Opens in a new tab and uses Google&rsquo;s own sense of where you are.</small>
+        </form>
         <div class="map-actions">
           <a id="googleMapsLink" href="https://www.google.com/maps/search/barber+shops+near+me" target="_blank" rel="noopener">Search Google Maps <span>↗</span></a>
           <a id="appleMapsLink" href="https://maps.apple.com/?q=barber+shops" target="_blank" rel="noopener">Search Apple Maps <span>↗</span></a>
