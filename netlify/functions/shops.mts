@@ -35,11 +35,6 @@ type ShopResult = {
   source: "Nomadic Ready" | "OpenStreetMap";
 };
 
-// The rating floor a nearby search holds reviewed shops to: 4.3 stars up to the
-// top of the scale. The client reads this back off the response so the on-page
-// copy always names the bar actually applied.
-const defaultMinRating = 4.3;
-
 // OpenStreetMap records a shop's web presence under a spread of keys, and the
 // values are hand-entered: full URLs, bare domains, or bare social handles.
 const fallbackShopName = "Local barber shop";
@@ -255,7 +250,7 @@ async function findOpenStreetMapShops(origin: Coordinates): Promise<ShopResult[]
       shopType: shopKind(tags),
       textureStatus: "ask" as const,
       // No public listing carries a star rating — OSM's `rating` key is
-      // electrical capacity in kVA — so these can never meet a rating bar.
+      // electrical capacity in kVA — so these carry none.
       rating: null,
       reviewCount: null,
       photoUrl: normaliseUrl(tags.image),
@@ -376,10 +371,6 @@ export default async (request: Request, context: Context) => {
       return new Response(JSON.stringify({ error: "Enter a city, state, or country, share your location, or search a shop by name." }), { status: 400, headers: jsonHeaders });
     }
 
-    // The directory bar: 4.3 stars and a photo, overridable for "show me everything".
-    const requestedRating = Number(url.searchParams.get("minRating") ?? defaultMinRating);
-    const minRating = Number.isFinite(requestedRating) ? Math.min(Math.max(requestedRating, 0), 5) : defaultMinRating;
-
     // The place lookup above has already returned, so this is the only Nominatim
     // request in flight — its usage policy allows one at a time.
     const [reviewed, openStreetMap, worldwide] = await Promise.all([
@@ -388,16 +379,6 @@ export default async (request: Request, context: Context) => {
       nameQuery ? findShopsByName(nameQuery, origin).catch(() => []) : [],
     ]);
     const seen = new Set<string>();
-    // A shop is worth a detour when a traveller can actually use it: somewhere to
-    // click, a barbershop rather than a blow-dry bar, and a named listing. The
-    // floor caps the total discount so "nearby" still means nearby.
-    const detourScore = (shop: ShopResult) => {
-      const weight = (shop.bookingUrl ? 0.25 : 1)
-        * (shop.shopType === "Barbershop" ? 0.7 : 1)
-        * (shop.textures.length ? 0.85 : 1)
-        * (shop.name === fallbackShopName ? 1.5 : 1);
-      return (shop.distance ?? Infinity) * Math.max(weight, 0.2);
-    };
     const byDistance = (first: ShopResult, second: ShopResult) => (first.distance ?? Infinity) - (second.distance ?? Infinity);
     const nameWordsQueried = nameWords(nameQuery);
     const candidates = [...reviewed, ...openStreetMap]
@@ -410,14 +391,11 @@ export default async (request: Request, context: Context) => {
         return true;
       });
 
-    // Apply the rating bar before taking the top five, or a 4.8-rated shop just
-    // outside the nearest five would be dropped before it was ever considered.
-    const meetsBar = (shop: ShopResult) => shop.rating != null && shop.rating >= minRating && shop.photoUrl != null;
-    const bestFive = (pool: ShopResult[]) => pool.sort((first, second) => detourScore(first) - detourScore(second)).slice(0, 5).sort(byDistance);
-    const ranked = bestFive(candidates.filter(meetsBar));
-    // Public listings hold no rating at all, so they can never clear the bar.
-    // They are returned separately rather than silently dressed up as rated.
-    const nearby = bestFive(candidates.filter((shop) => !meetsBar(shop)));
+    // The nearest shops win, with no rating required. Barbershops come first;
+    // if fewer than five are nearby, the closest hair salons fill the list.
+    const barbershops = candidates.filter((shop) => shop.shopType === "Barbershop");
+    const salons = candidates.filter((shop) => shop.shopType !== "Barbershop");
+    const nearest = [...barbershops, ...salons].slice(0, 5).sort(byDistance);
 
     // What the name search found outside the nearby ring. Nominatim has already
     // matched these against the same name, and answers an unknown name with
@@ -444,10 +422,8 @@ export default async (request: Request, context: Context) => {
     }
 
     return new Response(JSON.stringify({
-      shops: ranked,
-      nearby,
+      shops: nearest,
       worldwide: elsewhere,
-      minRating,
       nameQuery: nameQuery || null,
       location: origin ? origin.label ?? null : "Worldwide",
       origin: origin ? { latitude: origin.latitude, longitude: origin.longitude } : null,
