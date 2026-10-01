@@ -48,17 +48,10 @@ if (globalTrack && globalSound) {
 
 let currentPosition = null;
 let currentShops = [];
-let nearbyShops = [];
 // Name matches from outside the nearby ring — a shop the traveller named that
 // sits in another city or another country.
 let worldwideShops = [];
 let activeFilter = "all";
-// The directory bar the guide holds shops to: 4.3 stars and up, with a photo on
-// file. The server owns the number and echoes it back on every search, so the
-// copy below is written from that value rather than hard-coding it here.
-let ratedOnly = true;
-let ratingBar = 4.3;
-const barLabel = () => ratingBar.toFixed(1);
 // Set from the server's echo of the name filter, so the UI and the results
 // always describe the same search even if the server trimmed the input.
 let nameQuery = "";
@@ -148,20 +141,14 @@ async function loadShops(url, fallbackLabel) {
   const data = await response.json();
   if (!response.ok) throw new Error(data.error || "Shop search is unavailable right now.");
   currentShops = data.shops || [];
-  nearbyShops = data.nearby || [];
   worldwideShops = data.worldwide || [];
   nameQuery = data.nameQuery || "";
-  if (Number.isFinite(data.minRating)) {
-    ratingBar = data.minRating;
-    syncRatedToggle();
-  }
   if (data.origin) mapsLinks(data.origin.latitude, data.origin.longitude);
   const area = data.location || fallbackLabel;
   resultLocation.textContent = area;
   // Now that the area has a name, the Google link can say where to look.
   googleWebSearch(`${nameQuery || "barber shops"} ${area && area !== "Your current area" ? `in ${area}` : "near me"}`);
-  const matches = currentShops.length + nearbyShops.length + worldwideShops.length;
-  const shown = ratedOnly && !nameQuery ? currentShops.length : matches;
+  const matches = currentShops.length + worldwideShops.length;
   if (nameQuery) {
     // A name search answers one question, so report it as a count of matches
     // rather than as a directory result.
@@ -170,11 +157,9 @@ async function loadShops(url, fallbackLabel) {
       : `No shop named “${nameQuery}” nearby — try Google below`;
     if (!matches) offerGoogleFallback(nameQuery);
   } else {
-    status.textContent = ratedOnly && !currentShops.length
-      ? `No ${barLabel()}★ reviewed shops here yet — ${nearbyShops.length} to vet yourself`
-      : `${shown} shop${shown === 1 ? "" : "s"} found`;
+    status.textContent = `${matches} nearest shop${matches === 1 ? "" : "s"} found`;
   }
-  mapPins.forEach((pin, index) => pin.classList.toggle("hidden", index >= Math.max(shown, nearbyShops.length)));
+  mapPins.forEach((pin, index) => pin.classList.toggle("hidden", index >= matches));
   renderShops();
 }
 
@@ -209,7 +194,7 @@ function shopCard(shop, index) {
   const media = photo ? `<img class="shop-photo" src="${escapeHtml(photo)}" alt="${escapeHtml(shop.name)}" loading="lazy" decoding="async" referrerpolicy="no-referrer">` : "";
   const rating = shop.rating != null
     ? `<span class="shop-rating"><b>${shop.rating.toFixed(1)}</b><i aria-hidden="true">★</i>${shop.reviewCount ? `<small>${shop.reviewCount} reviews</small>` : ""}</span>`
-    : `<span class="shop-rating none">Not yet rated</span>`;
+    : "";
   const credit = photo && shop.photoCredit ? `<small class="shop-credit">Photo: ${escapeHtml(shop.photoCredit)}</small>` : "";
   return `<article class="shop-card${photo ? " has-photo" : ""}"><div class="shop-rank">0${index + 1}</div>${media}<div><div class="shop-title"><h3>${escapeHtml(shop.name)}</h3><span>${escapeHtml(shop.shopType || shop.source)}</span></div><p>${escapeHtml(shop.address)}${shop.city ? ` \u00b7 ${escapeHtml(shop.city)}` : ""}${shop.country ? `, ${escapeHtml(shop.country)}` : ""}</p><div class="tags">${tags.map((tag) => `<span>${escapeHtml(tag)}</span>`).join("") || "<span>Public listing</span>"}</div>${textureLine}${credit}</div><div class="shop-side">${rating}<b>${escapeHtml(distanceLabel(shop))}</b>${websiteAction}<a class="shop-map-link" href="${escapeHtml(shopMap)}" target="_blank" rel="noopener" aria-label="View ${escapeHtml(shop.name)} on a map">Map \u2197</a></div></article>`;
 }
@@ -221,35 +206,22 @@ function renderShops() {
   const applyFilter = (list) => activeFilter === "all"
     ? list
     : list.filter((shop) => shop.textureStatus !== "verified" || textureMatches(shop, activeFilter));
-  const rated = applyFilter(currentShops);
-  const unrated = applyFilter(nearbyShops);
+  const nearest = applyFilter(currentShops);
   const elsewhere = applyFilter(worldwideShops);
 
   const named = nameQuery ? `\u201c${escapeHtml(nameQuery)}\u201d ` : "";
   const groups = [];
-  if (rated.length) {
-    groups.push(`<p class="result-group"><b>${named}Rated ${barLabel()}\u2605 and up</b> reviewed and photographed for the directory</p>`);
-    groups.push(rated.map((shop, index) => shopCard(shop, index)).join(""));
-  }
-  // The reviewed directory is thin, so a bar with no matches must not leave the
-  // visitor staring at a dead page. Fall through to the public listings, but keep
-  // them under their own heading so nothing here reads as rated.
-  // Someone searching by name wants that shop, rated or not, so a name search
-  // always shows the match rather than hiding it behind the rating bar.
-  const showUnrated = unrated.length > 0 && (!ratedOnly || rated.length === 0 || Boolean(nameQuery));
-  if (showUnrated) {
-    groups.push(nameQuery
-      ? `<p class="result-group secondary"><b>${named}nearby, not yet reviewed</b> matched by name in the public listings \u2014 no rating exists for these, so ask before you sit down</p>`
-      : rated.length
-        ? `<p class="result-group secondary"><b>Nearby, not yet reviewed</b> no rating exists for these \u2014 ask before you sit down</p>`
-        : `<p class="result-group secondary"><b>No ${barLabel()}\u2605 reviewed shops here yet</b> the directory only lists shops we have reviewed and photographed. These nearby barbershops carry no rating at all, so ask before you sit down.</p>`);
-    groups.push(unrated.map((shop, index) => shopCard(shop, index)).join(""));
+  // The nearest shops, closest first. Ratings are shown where one exists but
+  // never decide whether a shop is listed.
+  if (nearest.length) {
+    groups.push(`<p class="result-group"><b>${named}Nearest to you</b> closest first \u2014 confirm your hair type before you sit down</p>`);
+    groups.push(nearest.map((shop, index) => shopCard(shop, index)).join(""));
   }
   // A shop the traveller named is worth showing wherever it turned out to be, so
-  // these are never hidden behind the rating bar or the nearby radius. They are
+  // these are never hidden behind the nearby radius. They are
   // kept in their own group so nothing here reads as being around the corner.
   if (elsewhere.length) {
-    groups.push(`<p class="result-group secondary"><b>${named}found elsewhere in the world</b> matched by name outside your area \u2014 no rating exists for these, so ask before you sit down</p>`);
+    groups.push(`<p class="result-group secondary"><b>${named}found elsewhere in the world</b> matched by name outside your area \u2014 ask before you sit down</p>`);
     groups.push(elsewhere.map((shop, index) => shopCard(shop, index)).join(""));
   }
   if (!groups.length) {
@@ -392,22 +364,6 @@ document.querySelectorAll(".filter").forEach((button) => button.addEventListener
   activeFilter = button.dataset.filter;
   renderShops();
 }));
-
-const ratedToggle = document.querySelector("#ratedToggle");
-function syncRatedToggle() {
-  if (!ratedToggle) return;
-  ratedToggle.classList.toggle("active", ratedOnly);
-  ratedToggle.setAttribute("aria-pressed", String(ratedOnly));
-  ratedToggle.textContent = ratedOnly ? `${barLabel()}\u2605 and up` : "Showing all nearby";
-  const note = ratedToggle.parentElement?.querySelector("small");
-  if (note) note.textContent = `Reviewed shops only \u2014 ${barLabel()} stars or better, with a photo on file. Tap to include nearby listings that carry no rating.`;
-}
-function setRatedOnly(value) {
-  ratedOnly = value;
-  syncRatedToggle();
-  renderShops();
-}
-if (ratedToggle) ratedToggle.addEventListener("click", () => setRatedOnly(!ratedOnly));
 
 loadApproximateLocation();
 
